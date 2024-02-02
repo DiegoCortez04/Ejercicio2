@@ -28,6 +28,20 @@ const postMateria = (request,response) => {
 };
 app.route("/materia").post(postMateria);
 
+//DELETE MATERIA
+const delMateria = (request,response) => {
+    const id = request.params.id;
+    //console.log(id):return false;
+    connection.query("DELETE FROM tbl_materia WHERE ID_Materia = ?",
+    [id],
+    (error,results) => {
+        if(error)
+            throw error;
+        response.status(201).json({"Materia eliminada":results.affectedRows});
+    });
+};
+app.route("/materia/:id").delete(delMateria);
+
 //Ruta
 app.route("/materia").get(getMateria);
 module.exports = app;

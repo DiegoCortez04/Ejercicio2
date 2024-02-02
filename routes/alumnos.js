@@ -29,6 +29,24 @@ const postAlumno = (request,response) => {
 };
 app.route("/alumnos").post(postAlumno);
 
+//DELETE ALUMNO
+const delAlumno = (request,response) => {
+    const id = request.params.id;
+    //console.log(id):return false;
+    connection.query("DELETE FROM tbl_alumno WHERE ID_Alumno = ?",
+    [id],
+    (error,results) => {
+        if(error)
+            throw error;
+        response.status(201).json({"Alumno eliminado":results.affectedRows});
+    });
+};
+app.route("/alumnos/:id").delete(delAlumno);
+
+
+
 //Ruta
 app.route("/alumnos").get(getAlumno);
 module.exports = app;
+
+/* */
