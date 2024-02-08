@@ -18,14 +18,25 @@ const getAlumno = (request,response) => {
 
 /*aqui va mi primer post*/
 const postAlumno = (request,response) => {
-    const {carrera,nombre,apellido,edad,email,estado} = request.body;
-    connection.query("INSERT INTO tbl_alumno (FK_Carrera,Nombre,Apellido,Edad,Email,Estado) VALUES(?,?,?,?,?,?)",
-    [carrera,nombre,apellido,edad,email,estado],
-    (error,results) => {
-        if(error)
-        throw error;
-    response.status(201).json({"Item añadido correctamente": results.affectedRows});
-    });
+    const {action,id,carrera,nombre,apellido,edad,email,estado} = request.body;
+    if(action=="insert"){
+        connection.query("INSERT INTO tbl_alumno (FK_Carrera,Nombre,Apellido,Edad,Email,Estado) VALUES(?,?,?,?,?,?)",
+        [carrera,nombre,apellido,edad,email,estado],
+        (error,results) => {
+            if(error)
+            throw error;
+        response.status(201).json({"Item añadido correctamente": results.affectedRows});
+        });
+    }
+    else{
+        connection.query("UPDATE tbl_alumno SET FK_Carrera=?,Nombre=?,Apellido=?,Edad=?,Email=?,Estado=? WHERE ID_Alumno=?",
+        [carrera,nombre,apellido,edad,email,estado,id],
+        (error,results)=>{
+            if(error)
+                throw error;
+            response.status(201).json({"Alumno editado":results.affectedRows});
+        });
+    }
 };
 app.route("/alumnos").post(postAlumno);
 
@@ -42,8 +53,6 @@ const delAlumno = (request,response) => {
     });
 };
 app.route("/alumnos/:id").delete(delAlumno);
-
-
 
 //Ruta
 app.route("/alumnos").get(getAlumno);
