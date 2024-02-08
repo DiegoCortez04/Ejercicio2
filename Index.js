@@ -7,6 +7,7 @@ app.use(express.urlencoded({extended:true}));
 //Cargamos el archivo de rutas
 app.use(require('./routes/alumnos'));
 app.use(require('./routes/materia'));
+app.use(require('./routes/carrera'));
 
 //app.use(require('./routes/materias'));
 

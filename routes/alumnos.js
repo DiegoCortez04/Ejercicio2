@@ -16,29 +16,48 @@ const getAlumno = (request,response) => {
     });
 };
 
+
+
+
 /*aqui va mi primer post*/
-const postAlumno = (request,response) => {
-    const {action,id,carrera,nombre,apellido,edad,email,estado} = request.body;
-    if(action=="insert"){
-        connection.query("INSERT INTO tbl_alumno (FK_Carrera,Nombre,Apellido,Edad,Email,Estado) VALUES(?,?,?,?,?,?)",
-        [carrera,nombre,apellido,edad,email,estado],
-        (error,results) => {
+const postAlumno = (request, response) => {
+    const {action,id,carrera, nombre, apellido, edad, email, estado} = request.body;
+    //console.log(action);return false;
+    if(action == "insert"){
+        connection.query("INSERT INTO tbl_alumno (FK_Carrera,Nombre,Apellido,Edad,Email,Estado) VALUES(?,?,?,?,?,?)", 
+        [carrera, nombre, apellido, edad,email,estado],
+        (error, results) => {
             if(error)
-            throw error;
-        response.status(201).json({"Item añadido correctamente": results.affectedRows});
+                throw error;
+            response.status(201).json({"Alumno añadido correctamente": results.affectedRows});
         });
     }
     else{
+        //console.log(action);return false;
         connection.query("UPDATE tbl_alumno SET FK_Carrera=?,Nombre=?,Apellido=?,Edad=?,Email=?,Estado=? WHERE ID_Alumno=?",
-        [carrera,nombre,apellido,edad,email,estado,id],
-        (error,results)=>{
+        [carrera,nombre, apellido, edad,email,estado,id],
+        (error, results) => {
             if(error)
                 throw error;
-            response.status(201).json({"Alumno editado":results.affectedRows});
+            response.status(201).json({"Alumno actualizado correctamente": results.affectedRows});
         });
     }
 };
 app.route("/alumnos").post(postAlumno);
+
+//GET CARRERA
+//LISTADO DE ALUMNOS Y A QUE CARRERA PERTENECEN
+const getAlumnoCarrera = (request,response) => {
+    connection.query("SELECT tbl_alumno.Nombre, tbl_carrera.Carrera FROM tbl_alumno INNER JOIN tbl_carrera WHERE tbl_alumno.FK_Carrera = tbl_carrera.ID_Carrera ",
+    (error,results)=>{
+        if(error)
+        throw error;
+    response.status(200).json(results);
+
+    });
+};
+app.route("/alumnoscarrera").get(getAlumnoCarrera);
+
 
 //DELETE ALUMNO
 const delAlumno = (request,response) => {
@@ -57,5 +76,3 @@ app.route("/alumnos/:id").delete(delAlumno);
 //Ruta
 app.route("/alumnos").get(getAlumno);
 module.exports = app;
-
-/* */
